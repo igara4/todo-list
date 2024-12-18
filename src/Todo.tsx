@@ -7,6 +7,7 @@ function Todo() {
   const [completeTodos,setCompleteTodos]=useState<any>([])
   const [deletedTodos,setDeletedTodos]=useState<any>([])
   const [statuses,setStatuses]= useState<any>(['全て','現在のタスク','完了したタスク','ゴミ箱'])
+  const [selectedStatus,setSelectedStatus]=useState<any>('全て')
 
   const onChangeTodoText=(e:any)=>{
     setTodoText(e.target.value)
@@ -18,6 +19,11 @@ function Todo() {
     setIncompleteTodos(newTodos)
     setTodoText('')
   }
+
+  const handleStatusChange=(e:any)=>{
+    setSelectedStatus(e.target.value)
+  }
+
 
   const onClickComplete=(index:number)=>{
     const newIncompleteTodos=[...incompleteTodos]
@@ -51,6 +57,18 @@ function Todo() {
     setDeletedTodos(newDeletedTodos)
   }
 
+  const getFilteredTodos=()=>{
+    switch(selectedStatus){
+      case '現在のタスク':
+        return incompleteTodos;
+      case '完了したタスク':
+        return completeTodos;
+      case 'ゴミ箱':
+        return deletedTodos;
+      default:
+        return[...incompleteTodos,...completeTodos,...deletedTodos]
+    }
+  }
   
   return (
     <>
@@ -61,50 +79,36 @@ function Todo() {
       <input placeholder='TODOを入力' value={todoText} onChange={onChangeTodoText}/>
       <button onClick={onClickAdd}>追加</button>
     </div>
-    <select>
+    <select onChange={handleStatusChange}>
       {statuses.map((status:any)=>{
         return <option key='status'>{status}</option>})}
     </select>
     <div className='IncompleteArea'>
-      <p className='title'>未完了のTODO</p>
+      <p className='title'>TODO</p>
       <ul>
-        {incompleteTodos.map((todo:any,index:number)=>(
+        {getFilteredTodos().map((todo:any,index:number)=>(
           <li key={todo}>
             <div className='listRow'>
               <p className='todoItem'>{todo}</p>
-              <button onClick={()=>onClickComplete(index)}>完了</button>
-              <button onClick={()=>onClickDelete(index)}>削除</button>
+              {selectedStatus==='現在のタスク' && (
+                <>
+                <button onClick={()=>onClickComplete(index)}>完了</button>
+                <button onClick={()=>onClickDelete(index)}>削除</button>
+                </>
+              )}
+              {selectedStatus==='完了したタスク'&&(
+                <button onClick={()=>onClickBack(index)}>戻す</button>
+              )}
+              {selectedStatus==='ゴミ箱'&& (
+                <button onClick={()=>onClickReturn(index)}>戻す</button>
+              )}
+              
             </div>
             </li>
         ))}
       </ul>
     </div>
-    <div className='CompleteArea'>
-      <p className='title'>完了のTODO</p>
-      <ul>
-        {completeTodos.map((todo:any,index:number)=>(
-          <li key={todo}>
-            <div className='listRow'>
-              <p className='todoItem'>{todo}</p>
-              <button onClick={()=>onClickBack(index)}>戻す</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-    <div className='DeletedArea'>
-      <p className='title'>ゴミ箱のTODO</p>
-      <ul>
-        {deletedTodos.map((todo:any,index:number)=>(
-          <li key={todo}>
-            <div className='listRow'>
-              <p className='todoItem'>{todo}</p>
-              <button onClick={()=>onClickReturn(index)}>戻す</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    
     </>
     
   );
