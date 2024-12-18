@@ -1,0 +1,76 @@
+body {
+    font-family: sans-serif;
+    color: rgb(83, 81, 81);
+}
+
+input {
+    border-radius: 8px;
+    border: none;
+    padding: 6px 16px;
+}
+
+button {
+    border-radius: 8px;
+    border: none;
+    padding: 4px 16px;
+    margin: 0px 2px;
+}
+
+button:hover {
+    background-color: rgb(124, 128, 190);
+    color: beige;
+    cursor: pointer;
+}
+
+.InputArea{
+    background-color:  rgb(187   223   247) ;
+    width:  400px ;
+    height:  30px ;
+    padding:  8px ;
+    margin:  8px ;
+    border-radius:  8px; 
+}
+
+.IncompleteArea{
+    border: 2px solid rgb(68 175 189);
+    width: 400px;
+    min-height: 200px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 8px;
+}
+
+.CompleteArea{
+    border: 2px solid rgb(68, 175, 189);
+    width: 400px;
+    min-height: 200px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 8px;
+    background-color: rgb(226, 226, 234);
+}
+
+.DeletedArea{
+    border: 2px solid rgb(68, 175, 189);
+    width: 400px;
+    min-height: 200px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 8px;
+    background-color: rgb(150, 150, 156);
+}
+
+.title {
+    text-align: center;
+    margin-top: 0px;
+    font-weight: bold;
+}
+
+.listRow {
+    display: flex;
+    align-items: center;
+}
+
+.todoItem {
+    margin: 6px;
+}
