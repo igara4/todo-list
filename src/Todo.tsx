@@ -6,8 +6,7 @@ function Todo() {
   const [incompleteTodos,setIncompleteTodos]=useState<any>([])
   const [completeTodos,setCompleteTodos]=useState<any>([])
   const [deletedTodos,setDeletedTodos]=useState<any>([])
-
-  const statuses= ['全て','現在のタスク','完了したタスク','ゴミ箱']
+  const [statuses,setStatuses]= useState<any>(['全て','現在のタスク','完了したタスク','ゴミ箱'])
 
   const onChangeTodoText=(e:any)=>{
     setTodoText(e.target.value)
@@ -63,7 +62,7 @@ function Todo() {
       <button onClick={onClickAdd}>追加</button>
     </div>
     <select>
-      {statuses.map((status)=>{
+      {statuses.map((status:any)=>{
         return <option key='status'>{status}</option>})}
     </select>
     <div className='IncompleteArea'>
