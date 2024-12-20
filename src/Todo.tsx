@@ -2,113 +2,137 @@ import React, { useState } from 'react';
 import './styles.css';
 
 function Todo() {
-  const [todoText,setTodoText]=useState('')
-  const [incompleteTodos,setIncompleteTodos]=useState<any>([])
-  const [completeTodos,setCompleteTodos]=useState<any>([])
-  const [deletedTodos,setDeletedTodos]=useState<any>([])
-  const [statuses,setStatuses]= useState<any>(['全て','現在のタスク','完了したタスク','ゴミ箱'])
-  const [selectedStatus,setSelectedStatus]=useState<any>('全て')
-
-  const onChangeTodoText=(e:any)=>{
-    setTodoText(e.target.value)
-  }
+  const[todos,setTodos]=useState<any>([])
+  const[newTodo,setNewTodo]=useState<any>({
+    title:'',
+    detail:''
+  })
+  const [filterText, setFilterText] = useState<string>('');
+  const [filterStatus,setFilterStatus]=useState<any>('すべて')
+  const [currentID,setCurrentID]=useState<number>(1)
+  const [editingTodoId,setEditingTodoID]=useState<any>(null)
+  const [editingTodo,setEditingTodo]=useState<any>({})
 
   const onClickAdd=()=>{
-    if (todoText === '') return;
-    const newTodos:any=[...incompleteTodos,todoText]
-    setIncompleteTodos(newTodos)
-    setTodoText('')
-  }
-
-  const handleStatusChange=(e:any)=>{
-    setSelectedStatus(e.target.value)
-  }
-
-
-  const onClickComplete=(index:number)=>{
-    const newIncompleteTodos=[...incompleteTodos]
-    newIncompleteTodos.splice(index,1)
-    const newCompleteTodos=[...completeTodos,incompleteTodos[index]]
-    setIncompleteTodos(newIncompleteTodos)
-    setCompleteTodos(newCompleteTodos)
+    if(newTodo.title===''){
+      alert('タイトルを入力してください') 
+      return
+    }
+    const newItem:any={
+      id:currentID.toString(),
+      title:newTodo.title,
+      status:'未着手',
+      detail:newTodo.detail
+    }
+    setTodos([...todos,newItem])
+    setNewTodo({title:'',detail:''})
+    setCurrentID(currentID+1)
   }
 
   const onClickDelete=(index:number)=>{
-    const newIncompleteTodos=[...incompleteTodos]
-    newIncompleteTodos.splice(index,1)
-    const newDeletedTodos=[...deletedTodos,incompleteTodos[index]]
-    setIncompleteTodos(newIncompleteTodos)
-    setDeletedTodos(newDeletedTodos)
+    const updatedTodos=[...todos]
+    updatedTodos.splice(index,1)
+    setTodos(updatedTodos)
   }
 
-  const onClickBack=(index:number)=>{
-    const newCompleteTodos=[...completeTodos]
-    newCompleteTodos.splice(index,1)
-    const newIncompleteTodos=[...incompleteTodos,completeTodos[index]]
-    setIncompleteTodos(newIncompleteTodos)
-    setCompleteTodos(newCompleteTodos)
+  const startEditing=(todo:any)=>{
+    setEditingTodoID(todo.id)
+    setEditingTodo(todo)
   }
 
-  const onClickReturn=(index:number)=>{
-    const newDeletedTodos=[...deletedTodos]
-    newDeletedTodos.splice(index,1)
-    const newIncompleteTodos=[...incompleteTodos,deletedTodos[index]]
-    setIncompleteTodos(newIncompleteTodos)
-    setDeletedTodos(newDeletedTodos)
+  const saveEditedTodo=()=>{
+    setTodos(todos.map((todo:any)=>todo.id===editingTodoId?{...todo,...editingTodo}:todo))
+    setEditingTodoID(null)
+    setEditingTodo({})
   }
 
-  const getFilteredTodos=()=>{
-    switch(selectedStatus){
-      case '現在のタスク':
-        return incompleteTodos;
-      case '完了したタスク':
-        return completeTodos;
-      case 'ゴミ箱':
-        return deletedTodos;
-      default:
-        return[...incompleteTodos,...completeTodos,...deletedTodos]
-    }
-  }
-  
+  const filteredTodos=todos.filter((todo:any)=>{
+    const matchesText=todo.id.includes(filterText)||todo.title.includes(filterText)
+    const matchesStatus=filterStatus==='すべて'?true:todo.status===filterStatus
+    return matchesText&&matchesStatus
+  })
+
   return (
     <>
-    <div>
-    <p>TODOリスト</p>
+    <div className='title'>
+    <h2>TODOリスト</h2>
     </div>
-    <div className='InputArea'>
-      <input placeholder='TODOを入力' value={todoText} onChange={onChangeTodoText}/>
+    <div className='input-area'>
+      <input
+        type='text' 
+        name='title'
+        placeholder='TODOタイトル'
+        value={newTodo.title}
+        onChange={(e)=>setNewTodo({...newTodo,title:e.target.value})}
+        />
+      <input
+        type='text'
+        name='detail'
+        placeholder='詳細'
+        value={newTodo.detail}
+        onChange={(e)=>setNewTodo({...newTodo,detail:e.target.value})}/>
       <button onClick={onClickAdd}>追加</button>
     </div>
-    <select onChange={handleStatusChange}>
-      {statuses.map((status:any)=>{
-        return <option key='status'>{status}</option>})}
-    </select>
-    <div className='IncompleteArea'>
-      <p className='title'>TODO</p>
+    <div className='filter-area'>
+      <input
+        type='text'
+        placeholder='IDまたはタイトルで検索'
+        value={filterText}
+        onChange={(e)=>setFilterText(e.target.value)}
+        />
+      <select
+        value={filterStatus}
+        onChange={(e)=>setFilterStatus(e.target.value)} 
+      >
+        <option value='すべて'>すべて</option>
+        <option value='未着手'>未着手</option>
+        <option value='進行中'>進行中</option>
+        <option value='完了'>完了</option>
+      </select>
+    </div>
+    <div>
       <ul>
-        {getFilteredTodos().map((todo:any,index:number)=>(
-          <li key={todo}>
-            <div className='listRow'>
-              <p className='todoItem'>{todo}</p>
-              {selectedStatus==='現在のタスク' && (
-                <>
-                <button onClick={()=>onClickComplete(index)}>完了</button>
-                <button onClick={()=>onClickDelete(index)}>削除</button>
-                </>
-              )}
-              {selectedStatus==='完了したタスク'&&(
-                <button onClick={()=>onClickBack(index)}>戻す</button>
-              )}
-              {selectedStatus==='ゴミ箱'&& (
-                <button onClick={()=>onClickReturn(index)}>戻す</button>
-              )}
-              
+        {filteredTodos.map((todo:any,index:number)=>(
+          <li key={todo.id}>
+          {editingTodoId===todo.id?(
+            <div className='editing-area'>
+              <input 
+                type='text'
+                value={editingTodo.title??todo.title}
+                onChange={(e)=>setEditingTodo({...editingTodo,title:e.target.value})}
+                placeholder='タイトルを編集'
+              />
+              <select
+                value={editingTodo.status??todo.status}
+                onChange={(e)=>setEditingTodo({...editingTodo,status:e.target.value})}
+              >
+                <option value='未着手'>未着手</option>
+                <option value='進行中'>進行中</option>
+                <option value='完了'>完了</option>
+              </select>
+              <input
+                type='text'
+                value={editingTodo.detail??todo.detail}
+                onChange={(e)=>setEditingTodo({...editingTodo,detail:e.target.value})}
+                placeholder='詳細を編集'
+              />
+              <button onClick={saveEditedTodo}>保存</button>
+              <button onClick={()=>setEditingTodoID(null)}>キャンセル</button>
             </div>
-            </li>
+          ):(
+            <div className='todo-area'>
+              <p><strong>ID:</strong>{todo.id}</p>
+              <p><strong>タイトル:</strong>{todo.title}</p>
+              <p><strong>ステータス:</strong>{todo.status}</p>
+              <p><strong>詳細:</strong>{todo.detail}</p>
+              <button onClick={()=>onClickDelete(index)}>削除</button>
+              <button onClick={()=>startEditing(todo)}>編集</button>
+          </div>
+          )}
+          </li>
         ))}
       </ul>
     </div>
-    
     </>
     
   );

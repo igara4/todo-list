@@ -1,19 +1,20 @@
-body {
-    font-family: sans-serif;
-    color: rgb(83, 81, 81);
-}
-
+/* 入力フィールドのスタイル */
 input {
     border-radius: 8px;
-    border: none;
-    padding: 6px 16px;
+    border: 2px solid rgb(96, 97, 98);
+    padding: 8px 16px;
+    font-size: 14px;
+    width: calc(100% - 40px);
+    margin-bottom: 8px;
 }
 
+/* ボタンのスタイル */
 button {
     border-radius: 8px;
     border: none;
-    padding: 4px 16px;
-    margin: 0px 2px;
+    padding: 8px 16px;
+    margin: 4px;
+    font-size: 14px;
 }
 
 button:hover {
@@ -22,55 +23,62 @@ button:hover {
     cursor: pointer;
 }
 
-.InputArea{
-    background-color:  rgb(187   223   247) ;
-    width:  400px ;
-    height:  30px ;
-    padding:  8px ;
-    margin:  8px ;
-    border-radius:  8px; 
-}
-
-.IncompleteArea{
-    border: 2px solid rgb(68 175 189);
-    width: 400px;
-    min-height: 200px;
-    padding: 8px;
-    margin: 8px;
+/* 入力エリア */
+.input-area {
+    background-color: rgb(187, 223, 247);
+    width: 100%;
+    max-width: 400px;
+    padding: 16px;
+    margin: 16px auto;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.CompleteArea{
+/* TODOリストの各アイテム */
+.todo-area {
     border: 2px solid rgb(68, 175, 189);
-    width: 400px;
-    min-height: 200px;
-    padding: 8px;
-    margin: 8px;
+    max-width: 400px;
+    padding: 16px;
+    margin: 16px auto;
     border-radius: 8px;
     background-color: rgb(226, 226, 234);
 }
 
-.DeletedArea{
-    border: 2px solid rgb(68, 175, 189);
-    width: 400px;
-    min-height: 200px;
-    padding: 8px;
-    margin: 8px;
-    border-radius: 8px;
-    background-color: rgb(150, 150, 156);
-}
-
+/* タイトルのスタイル */
 .title {
     text-align: center;
-    margin-top: 0px;
+    margin: 16px 0;
     font-weight: bold;
+    font-size: 24px;
 }
 
-.listRow {
+/* フィルタエリア */
+.filter-area {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
-.todoItem {
-    margin: 6px;
+/* リスト全体 */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+/* 編集時のエリア */
+.editing-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    max-width: 400px;
+    margin: 0 auto;
 }
